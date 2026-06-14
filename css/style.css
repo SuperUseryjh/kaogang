@@ -1,0 +1,41 @@
+body {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+}
+/* 隐藏滚动条但保留滚动功能 */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+/* 卡片翻转动画 */
+.perspective-1000 {
+    perspective: 1000px;
+}
+.transform-style-3d {
+    transform-style: preserve-3d;
+}
+.backface-hidden {
+    backface-visibility: hidden;
+}
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
+/* 移动端底部安全区适配 */
+.safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+/* 淡入动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+/* tailwind config custom colors */
+:root {
+    --color-darkBg: #0f172a;
+    --color-darkCard: #1e293b;
+}

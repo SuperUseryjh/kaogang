@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>上海中考英语背默通关神器</title>
+    <!-- Tailwind CSS (本地) -->
+    <script src="js/tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome 图标库 (本地 CSS + CDN 字体) -->
+    <link rel="stylesheet" href="css/all.min.css">
+    <!-- Google Fonts - Inter & Noto Sans SC (CDN) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
+    <!-- 本地自定义样式 -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="min-h-screen text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300 pb-20 md:pb-0">
+
+    <!-- 全局防乱点加载遮罩层 -->
+    <div id="loading-overlay" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 transition-all duration-500 ease-out">
+        <div class="relative flex items-center justify-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-100 dark:border-slate-800"></div>
+            <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent absolute"></div>
+        </div>
+        <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 mt-5 animate-pulse">上海中考英语背默神器加载中...</p>
+        <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2">正在准备核心考纲词库与自适应设置，请稍候...</p>
+    </div>
+
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 sticky top-0 z-50 shadow-sm transition-colors duration-300">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-200 dark:shadow-none">
+                    E
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">上海中考英语背默神器</h1>
+                    <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium tracking-wider">SHANGHAI ZHONGKAO ENGLISH</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- 亮暗模式切换按钮 -->
+                <button id="theme-toggle-btn" onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors" title="切换暗黑/白天模式">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                </button>
+                <!-- 快捷静音按钮 -->
+                <button id="mute-btn" onclick="toggleMute()" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors" title="开启/关闭音效">
+                    <i class="fas fa-volume-up text-blue-600 dark:text-blue-400" id="mute-icon"></i>
+                </button>
+                <!-- 进度指示器 -->
+                <div class="hidden lg:flex items-center bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-full text-xs font-semibold">
+                    <i class="fas fa-bullseye mr-1.5"></i>
+                    目标：1700 中考核心词
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-4 md:py-6 flex flex-col md:flex-row gap-6">
+        
+        <!-- 左侧：功能切换与全局进度看板 (在桌面端显示，在移动端变成底栏) -->
+        <aside class="w-full md:w-1/4 flex flex-col space-y-4 shrink-0">
+            <!-- 桌面端侧边导航菜单 (移动端隐藏) -->
+            <div class="hidden md:block bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-1 transition-colors">
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-blue-600 bg-blue-50/70 dark:text-blue-400 dark:bg-blue-950/30">
+                    <i class="fas fa-chart-pie w-5 text-center"></i>
+                    <span>学习面板</span>
+                </button>
+                <button onclick="switchTab('flashcard')" id="tab-flashcard" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <i class="fas fa-clone w-5 text-center"></i>
+                    <span>词卡速记</span>
+                </button>
+                <button onclick="switchTab('dictation')" id="tab-dictation" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <i class="fas fa-keyboard w-5 text-center"></i>
+                    <span>默写大通关</span>
+                </button>
+                <button onclick="switchTab('transformation')" id="tab-transformation" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <i class="fas fa-exchange-alt w-5 text-center"></i>
+                    <span>词性转换特训</span>
+                </button>
+                <button onclick="switchTab('mistakes')" id="tab-mistakes" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 relative">
+                    <i class="fas fa-exclamation-triangle w-5 text-center"></i>
+                    <span>错题强化本</span>
+                    <span id="mistake-badge" class="absolute right-3 bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full hidden">0</span>
+                </button>
+                <button onclick="switchTab('wordlist')" id="tab-wordlist" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <i class="fas fa-list-ul w-5 text-center"></i>
+                    <span>考纲词汇表</span>
+                </button>
+            </div>
+
+            <!-- 数据统计小卡片 (桌面端卡片) -->
+            <div class="bg-gradient-to-br from-blue-600 to-indigo-700 dark:from-slate-900 dark:to-indigo-950 text-white p-5 rounded-2xl shadow-md shadow-blue-100 dark:shadow-none border border-transparent dark:border-slate-800">
+                <h3 class="text-sm font-semibold opacity-90 mb-3 flex items-center justify-between">
+                    <span>我的中考进度</span>
+                    <i class="fas fa-chart-line text-xs"></i>
+                </h3>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-xs opacity-75 mb-1">
+                            <span>已熟记单词</span>
+                            <span id="mastered-ratio">0%</span>
+                        </div>
+                        <div class="w-full bg-white/20 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div id="mastered-progress" class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-2 border-t border-white/10 dark:border-slate-800">
+                        <div class="text-center">
+                            <div class="text-[11px] opacity-75">总背诵数</div>
+                            <div class="text-base sm:text-lg font-bold" id="stats-total">0/150</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-[11px] opacity-75">平均正确率</div>
+                            <div class="text-base sm:text-lg font-bold" id="stats-accuracy">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 励志标语 (桌面端显示) -->
+            <div class="hidden md:block bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm text-center transition-colors">
+                <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">📖 每日励志</p>
+                <p class="text-sm text-slate-600 dark:text-slate-300 font-semibold mt-1">"Rome was not built in a day."</p>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">（冰冻三尺，非一日之寒）</p>
+            </div>
+        </aside>
+
+        <section class="flex-grow md:w-3/4 flex flex-col min-h-[450px]">
+
+            <!-- SECTION 1: 学习面板 (Dashboard) -->
+            <div id="view-dashboard" class="space-y-6">
+                <!-- 欢迎板块 -->
+                <div class="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 transition-colors">
+                    <div class="space-y-1 text-center sm:text-left">
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">欢迎备考上海英语中考！🏆</h2>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">精心选择上海中考高频重难点，分模块、高强度的背默闭环。</p>
+                    </div>
+                    <button onclick="switchTab('dictation')" class="w-full sm:w-auto px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all shadow-md shadow-blue-100 dark:shadow-none hover:shadow-lg flex items-center justify-center space-x-2">
+                        <i class="fas fa-play"></i>
+                        <span>开始今日默写</span>
+                    </button>
+                </div>
+
+                <div>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center">
+                        <span class="w-1 h-5 bg-blue-600 rounded-full mr-2"></span>
+                        专项通关关卡
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="category-cards">
+                        <!-- 分类卡片由 JS 动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 备考备忘录/高分秘籍 -->
+                <div class="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 p-5 rounded-2xl">
+                    <h4 class="text-amber-800 dark:text-amber-400 font-bold flex items-center text-sm">
+                        <i class="fas fa-lightbulb mr-2 text-amber-500 dark:text-amber-400"></i>
+                        上海中考英语词汇复习要点
+                    </h4>
+                    <ul class="mt-2.5 space-y-2 text-xs text-amber-900 dark:text-amber-300 leading-relaxed list-disc list-inside">
+                        <li><strong>首字母填空</strong>：必考！重点考察语境理解，在默写中要注意不规则动词过去式/过去分词，名词复数的变形。</li>
+                        <li><strong>词性转换 (Word Formation)</strong>：上海卷固定 8 分（句型填空第2大题），重点背记后缀（如名词-tion/-or/-er/-ness，形容词-ful/-y/-able等）。</li>
+                        <li><strong>高频固定词组</strong>：完型填空与综合阅秒杀利器，类似 <code class="bg-white/60 dark:bg-slate-800 px-1 rounded">depend on</code>, <code class="bg-white/60 dark:bg-slate-800 px-1 rounded">instead of</code> 必须能够一字不差地精准拼写。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="view-flashcard" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">📖 词卡速记</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">点击卡片可翻转。支持左右滑动手势或按键切换。</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <select id="flashcard-category-select" onchange="initFlashcards()" class="w-full sm:w-auto text-xs border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 font-medium bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 outline-none">
+                            <option value="all">全部词汇</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 词卡展示器 -->
+                <div class="flex flex-col items-center justify-center py-2 sm:py-6">
+                    <div id="flashcard-container" class="w-full max-w-md h-72 perspective-1000 cursor-pointer select-none">
+                        <div id="flashcard-inner" class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d shadow-xl dark:shadow-none rounded-3xl">
+                            <!-- 正面 (中文释义 + 词性) -->
+                            <div class="absolute w-full h-full backface-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-between p-6 sm:p-8">
+                                <span class="px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-semibold" id="card-pos-front">n. 名词</span>
+                                <div class="my-auto">
+                                    <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-white" id="card-meaning-front">成就，功绩</h3>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-4"><i class="fas fa-hand-pointer mr-1 animate-pulse"></i> 点击卡片翻转 / 左右滑动切词</p>
+                                </div>
+                                <div class="w-full flex justify-between text-xs text-slate-400 dark:text-slate-500 border-t border-slate-50 dark:border-slate-800/80 pt-3">
+                                    <span id="card-index">0/0</span>
+                                    <span id="card-category-tag">核心名词</span>
+                                </div>
+                            </div>
+                            <!-- 反面 (英文单词 + 词性 + 例句/搭配) -->
+                            <div class="absolute w-full h-full backface-hidden bg-gradient-to-br from-blue-600 to-indigo-700 dark:from-slate-800 dark:to-indigo-950 text-white rounded-3xl flex flex-col items-center justify-between p-6 sm:p-8 rotate-y-180">
+                                <span class="px-3 py-1 rounded-full bg-white/20 dark:bg-slate-800 text-white text-xs font-semibold" id="card-pos-back">noun</span>
+                                <div class="my-auto space-y-2">
+                                    <h3 class="text-3xl sm:text-4xl font-extrabold tracking-wide break-words max-w-xs" id="card-word-back">achievement</h3>
+                                    <p class="text-blue-200 dark:text-indigo-200 text-sm font-medium" id="card-meaning-back">成就，功绩</p>
+                                    <p class="text-xs text-blue-100/70 dark:text-indigo-100/70 italic max-w-xs mx-auto mt-2" id="card-example">a remarkable achievement</p>
+                                </div>
+                                <div class="w-full flex justify-between items-center text-xs text-blue-200 dark:text-indigo-200 border-t border-white/10 dark:border-slate-800 pt-3">
+                                    <button onclick="speakWord(event)" class="hover:text-white px-3 py-1.5 bg-white/10 dark:bg-slate-800/80 rounded-lg flex items-center space-x-1 min-h-[36px]">
+                                        <i class="fas fa-volume-up"></i>
+                                        <span>发音</span>
+                                    </button>
+                                    <span>点击翻回正面</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 sm:space-x-4 mt-6 sm:mt-8 w-full max-w-md justify-between px-2">
+                        <button onclick="prevCard()" class="w-12 h-12 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center transition-all shadow-sm">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="flex space-x-2 flex-grow justify-center">
+                            <button onclick="markCardMastered(false)" class="flex-1 max-w-[120px] py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm transition-all flex items-center justify-center space-x-1.5">
+                                <i class="fas fa-times text-rose-500"></i>
+                                <span>记不牢</span>
+                            </button>
+                            <button onclick="markCardMastered(true)" class="flex-1 max-w-[120px] py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-100 dark:shadow-none transition-all flex items-center justify-center space-x-1.5">
+                                <i class="fas fa-check"></i>
+                                <span>已熟记</span>
+                            </button>
+                        </div>
+                        <button onclick="nextCard()" class="w-12 h-12 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center transition-all shadow-sm">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-dictation" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">✍️ 词汇拼写默写通关</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">根据释义拼写英文。拼错时自动加入错题本巩固。</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <select id="dictation-category-select" onchange="initDictation()" class="text-xs border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 font-medium bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 outline-none">
+                            <option value="all">全部词汇</option>
+                        </select>
+                        <button onclick="initDictation()" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-lg transition-all whitespace-nowrap">
+                            <i class="fas fa-redo-alt mr-1"></i>重练
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 默写卡片 -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm p-5 sm:p-8 space-y-6 transition-colors">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-400 dark:text-slate-500 font-medium">进度: <strong id="dict-progress-text" class="text-slate-700 dark:text-slate-300">0/0</strong></span>
+                        <div class="flex space-x-3">
+                            <span class="text-emerald-600 dark:text-emerald-400 font-medium">正确: <strong id="dict-correct-count">0</strong></span>
+                            <span class="text-rose-500 dark:text-rose-400 font-medium">错误: <strong id="dict-wrong-count">0</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- 题目提示区 -->
+                    <div class="text-center py-6 space-y-3 bg-slate-50/50 dark:bg-slate-800/50 rounded-2xl">
+                        <span class="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-[11px] font-bold uppercase tracking-wider" id="dict-word-pos">词性</span>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white px-2" id="dict-word-meaning">词汇释义加载中</h3>
+                        <p class="text-xs text-slate-400 dark:text-slate-500" id="dict-hint-tip">提示：首字母为 <strong id="dict-first-letter" class="text-blue-600 dark:text-blue-400">A</strong>，包含 <strong id="dict-word-length" class="text-blue-600 dark:text-blue-400">0</strong> 个字母</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <input type="text" id="dict-input" autocomplete="off" placeholder="请在这里输入英文单词..." onkeydown="handleDictKeyDown(event)" class="w-full text-lg font-bold px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30 outline-none transition-all pr-12 text-center tracking-wide" />
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 text-xl" id="dict-feedback-icon"></div>
+                        </div>
+
+                        <!-- 答案显示区 -->
+                        <div id="dict-answer-box" class="hidden p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 animate-fadeIn space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-slate-400 dark:text-slate-500 font-semibold">标准答案</span>
+                                <button onclick="speakWord(event, document.getElementById('dict-answer-word').innerText)" class="text-blue-600 dark:text-blue-400 hover:underline text-xs flex items-center space-x-1">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span>发音</span>
+                                </button>
+                            </div>
+                            <div class="text-lg font-bold text-slate-800 dark:text-white" id="dict-answer-word">achievement</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed whitespace-pre-wrap" id="dict-answer-example"></div>
+                        </div>
+
+                        <!-- 按钮操作组 -->
+                        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                            <button onclick="revealDictAnswer()" class="flex-1 min-h-[44px] px-4 py-3 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-sm rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center space-x-1">
+                                <i class="fas fa-eye"></i>
+                                <span>不会拼？看答案</span>
+                            </button>
+                            <button id="dict-action-btn" onclick="checkDictAnswer()" class="flex-1 min-h-[44px] px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-md shadow-blue-100 dark:shadow-none transition-all flex items-center justify-center space-x-1">
+                                <i class="fas fa-check-double"></i>
+                                <span>确认提交 (Enter)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-transformation" class="hidden space-y-6">
+                <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-5 sm:p-6 rounded-2xl shadow-md">
+                    <h2 class="text-lg sm:text-xl font-bold">🎯 Word Formation 词性转换特训</h2>
+                    <p class="text-xs opacity-90 mt-1">专攻中考句型填空真题，牢牢拿稳词形转化分值。</p>
+                    <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] sm:text-xs">
+                        <span class="bg-white/20 px-2 py-0.5 rounded-full"><i class="fas fa-lightbulb mr-1"></i>动变名</span>
+                        <span class="bg-white/20 px-2 py-0.5 rounded-full"><i class="fas fa-lightbulb mr-1"></i>形变副</span>
+                        <span class="bg-white/20 px-2 py-0.5 rounded-full"><i class="fas fa-lightbulb mr-1"></i>名变形</span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-5 sm:p-8 space-y-6 transition-colors">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-400 dark:text-slate-500 font-medium">转换通关进度: <strong id="trans-progress-text" class="text-slate-700 dark:text-slate-300">0/0</strong></span>
+                        <div class="flex space-x-3">
+                            <span class="text-emerald-600 dark:text-emerald-400 font-medium">答对: <strong id="trans-correct-count">0</strong></span>
+                            <span class="text-rose-500 dark:text-rose-400 font-medium">答错: <strong id="trans-wrong-count">0</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- 核心题目 -->
+                    <div class="bg-slate-50/50 dark:bg-slate-800/50 rounded-2xl p-6 text-center space-y-3">
+                        <div class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">题目要求</div>
+                        <h3 class="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-white" id="trans-title">给出原型：succeed</h3>
+                        <div class="inline-flex items-center space-x-1 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 rounded-full text-xs font-semibold">
+                            <i class="fas fa-arrow-right"></i>
+                            <span id="trans-direction">请转换为形容词</span>
+                        </div>
+                    </div>
+
+                    <!-- 输入与验证 -->
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <input type="text" id="trans-input" autocomplete="off" placeholder="请在此输入转换后的目标词汇..." onkeydown="handleTransKeyDown(event)" class="w-full text-lg font-bold px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 dark:focus:ring-emerald-900/30 outline-none transition-all pr-12 text-center tracking-wide" />
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 text-xl" id="trans-feedback-icon"></div>
+                        </div>
+
+                        <!-- 答案反馈 -->
+                        <div id="trans-answer-box" class="hidden p-4 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 animate-fadeIn space-y-1">
+                            <div class="text-xs text-slate-400 dark:text-slate-500 font-semibold">正确解释与背记诀窍</div>
+                            <div class="text-lg font-bold text-slate-800 dark:text-white" id="trans-answer-word">successful</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed" id="trans-answer-detail"></div>
+                        </div>
+
+                        <!-- 按钮组 -->
+                        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                            <button onclick="revealTransAnswer()" class="flex-1 min-h-[44px] px-4 py-3 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-sm rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center space-x-1">
+                                <i class="fas fa-magic"></i>
+                                <span>提示答案</span>
+                            </button>
+                            <button id="trans-action-btn" onclick="checkTransAnswer()" class="flex-1 min-h-[44px] px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center space-x-1">
+                                <i class="fas fa-check"></i>
+                                <span>提交核对 (Enter)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-mistakes" class="hidden space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">⚠️ 错题强化本</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">自动收集拼错或看答案巩固的单词。消灭盲区。</p>
+                    </div>
+                    <button onclick="clearMistakes()" class="text-xs text-rose-600 hover:text-rose-400 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-950/30 px-3 py-2 rounded-lg font-semibold transition-all">
+                        <i class="fas fa-trash-alt mr-1"></i>清空
+                    </button>
+                </div>
+
+                <!-- 错题空状态 -->
+                <div id="mistakes-empty" class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-12 text-center space-y-4">
+                    <div class="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-emerald-500 text-2xl mx-auto shadow-inner">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-700 dark:text-slate-300">暂无错题记录！</h3>
+                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">太厉害了，去默写大关继续挑战吧。</p>
+                    </div>
+                </div>
+
+                <!-- 错题列表 -->
+                <div id="mistakes-content" class="hidden space-y-4">
+                    <div class="flex justify-between items-center bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40 px-4 py-3 rounded-xl text-xs font-semibold">
+                        <span class="text-rose-800 dark:text-rose-300">共有 <strong id="mistake-count">0</strong> 个需要反复复习的词汇</span>
+                        <button onclick="startMistakePractice()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-lg font-bold transition-all flex items-center space-x-1">
+                            <i class="fas fa-spell-check"></i>
+                            <span>错题默写</span>
+                        </button>
+                    </div>
+
+                    <!-- 错题表格移动端溢出保护 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm">
+                        <div class="overflow-x-auto no-scrollbar">
+                            <table class="w-full text-left text-sm min-w-[500px]">
+                                <thead class="bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 text-xs font-bold uppercase border-b border-slate-100 dark:border-slate-800">
+                                    <tr>
+                                        <th class="p-4">单词 / 词组</th>
+                                        <th class="p-4">词性</th>
+                                        <th class="p-4">释义</th>
+                                        <th class="p-4 text-center">错误数</th>
+                                        <th class="p-4 text-right">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mistake-list-tbody" class="divide-y divide-slate-50 dark:divide-slate-800">
+                                    <!-- 动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-wordlist" class="hidden space-y-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">📋 考纲词汇库</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">全面检索与自助标记中考核心考纲词。</p>
+                    </div>
+                    <!-- 搜索过滤器 -->
+                    <div class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
+                        <div class="relative w-full sm:w-60">
+                            <input type="text" id="wordlist-search" oninput="filterWordList()" placeholder="输入英文/中文检索..." class="w-full text-xs px-3 py-2.5 pl-8 border border-slate-200 dark:border-slate-800 rounded-lg outline-none bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 focus:border-blue-500" />
+                            <i class="fas fa-search absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        </div>
+                        <select id="wordlist-category-select" onchange="filterWordList()" class="w-full sm:w-auto text-xs border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-2.5 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 outline-none">
+                            <option value="all">全部类型</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 词汇总数统计 -->
+                <div class="text-xs text-slate-400 dark:text-slate-500 flex justify-between items-center font-medium">
+                    <span>满足检索条件的词汇数：<strong id="filtered-words-count" class="text-slate-700 dark:text-slate-300">0</strong></span>
+                </div>
+
+                <!-- 词汇网格 -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="wordlist-grid">
+                    <!-- 由 JS 渲染 -->
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-150 dark:border-slate-800 z-50 flex justify-around py-2.5 shadow-[0_-2px_10px_rgba(0,0,0,0.04)] transition-colors safe-bottom">
+        <button onclick="switchTab('dashboard')" id="m-tab-dashboard" class="flex flex-col items-center justify-center flex-1 text-blue-600 dark:text-blue-400">
+            <i class="fas fa-chart-pie text-lg"></i>
+            <span class="text-[9px] mt-1 font-medium">主页</span>
+        </button>
+        <button onclick="switchTab('flashcard')" id="m-tab-flashcard" class="flex flex-col items-center justify-center flex-1 text-slate-400 dark:text-slate-500">
+            <i class="fas fa-clone text-lg"></i>
+            <span class="text-[9px] mt-1 font-medium">速记</span>
+        </button>
+        <button onclick="switchTab('dictation')" id="m-tab-dictation" class="flex flex-col items-center justify-center flex-1 text-slate-400 dark:text-slate-500">
+            <i class="fas fa-keyboard text-lg"></i>
+            <span class="text-[9px] mt-1 font-medium">默写</span>
+        </button>
+        <button onclick="switchTab('transformation')" id="m-tab-transformation" class="flex flex-col items-center justify-center flex-1 text-slate-400 dark:text-slate-500">
+            <i class="fas fa-exchange-alt text-lg"></i>
+            <span class="text-[9px] mt-1 font-medium">转换</span>
+        </button>
+        <button onclick="switchTab('mistakes')" id="m-tab-mistakes" class="flex flex-col items-center justify-center flex-1 text-slate-400 dark:text-slate-500 relative">
+            <i class="fas fa-exclamation-triangle text-lg"></i>
+            <span class="text-[9px] mt-1 font-medium">错题</span>
+            <span id="m-mistake-badge" class="absolute top-1 right-5 bg-rose-500 text-white text-[8px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
+        </button>
+        <button onclick="switchTab('wordlist')" id="m-tab-wordlist" class="flex flex-col items-center justify-center flex-1 text-slate-400 dark:text-slate-500">
+            <i class="fas fa-list-ul text-lg"></i>
+            <span class="text-[9px] mt-1 font-medium">大纲</span>
+        </button>
+    </nav>
+
+    <!-- 网页页脚 -->
+    <footer class="hidden md:block bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 py-6 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 space-y-1">
+            <p>© 2026 上海英语中考考纲词汇背默平台 · 助力学子冲刺 A+ 🎯</p>
+            <p>包含核心高频词、上海中考常考词形转换、中高频介词和动词短语。</p>
+        </div>
+    </footer>
+
+    <!-- 拆分后的独立 JS 模块文件 (按加载依赖顺序排列) -->
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/flashcard.js"></script>
+    <script src="js/dictation.js"></script>
+    <script src="js/transformation.js"></script>
+    <script src="js/mistakes.js"></script>
+    <script src="js/wordlist.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
