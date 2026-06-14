@@ -4,44 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>上海中考英语背默通关神器</title>
-    <!-- Tailwind CSS (本地) -->
-    <script src="js/tailwind.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#001e2b',
-                        darkCard: '#0a2a3a',
-                        'mdg-deep': '#001e2b',
-                        'mdg-teal': '#003d4f',
-                        'mdg-teal-mid': '#00684a',
-                        'mdg-green': '#00ed64',
-                        'mdg-green-dark': '#00b545',
-                        'mdg-green-soft': '#c3f0d2',
-                        'mdg-surface': '#f9fbfa',
-                        'mdg-hairline': '#e1e5e8',
-                        'mdg-ink': '#001e2b',
-                        'mdg-slate': '#3d4f5b',
-                        'mdg-steel': '#5c6c7a',
-                        'mdg-stone': '#7c8c9a',
-                        'mdg-muted': '#a8b3bc',
-                    },
-                    fontFamily: {
-                        'display': ['Inter', 'Noto Sans SC', 'sans-serif'],
-                    },
-                    borderRadius: {
-                        'pill': '9999px',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome 图标库 (本地 CSS + CDN 字体) -->
-    <link rel="stylesheet" href="css/all.min.css">
-    <!-- Google Fonts - Inter & Noto Sans SC (CDN) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
+    <!-- Google Fonts preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- FontAwesome 图标库 (非关键 CSS，不阻塞渲染) -->
+    <link rel="stylesheet" href="css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="css/all.min.css"></noscript>
+    <!-- Google Fonts - Inter & Noto Sans SC (非关键 CSS，不阻塞渲染) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap" rel="stylesheet"></noscript>
     <!-- 本地自定义样式 -->
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -536,6 +507,40 @@
         </div>
     </footer>
 
+    <!-- Tailwind CSS 运行时 (非阻塞，放底部避免 render-blocking) -->
+    <script src="js/tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#001e2b',
+                        darkCard: '#0a2a3a',
+                        'mdg-deep': '#001e2b',
+                        'mdg-teal': '#003d4f',
+                        'mdg-teal-mid': '#00684a',
+                        'mdg-green': '#00ed64',
+                        'mdg-green-dark': '#00b545',
+                        'mdg-green-soft': '#c3f0d2',
+                        'mdg-surface': '#f9fbfa',
+                        'mdg-hairline': '#e1e5e8',
+                        'mdg-ink': '#001e2b',
+                        'mdg-slate': '#3d4f5b',
+                        'mdg-steel': '#5c6c7a',
+                        'mdg-stone': '#7c8c9a',
+                        'mdg-muted': '#a8b3bc',
+                    },
+                    fontFamily: {
+                        'display': ['Inter', 'Noto Sans SC', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'pill': '9999px',
+                    }
+                }
+            }
+        }
+    </script>
     <!-- 拆分后的独立 JS 模块文件 (按加载依赖顺序排列) -->
     <script src="js/data.js"></script>
     <script src="js/utils.js"></script>
