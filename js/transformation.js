@@ -117,10 +117,19 @@ function revealTransAnswer() {
     if (activeTransList.length === 0 || transChecked) return;
     const input = document.getElementById('trans-input');
     const item = activeTransList[currentTransIndex];
+    const feedbackIcon = document.getElementById('trans-feedback-icon');
+    const answerBox = document.getElementById('trans-answer-box');
 
     input.value = item.target;
-    checkTransAnswer();
-    
+    transChecked = true;
+    appState.stats.totalAttempts++;
+    transWrongCount++;
+
+    input.className = "w-full text-lg font-bold px-4 py-3.5 rounded-pill border-2 border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/50 dark:bg-rose-950/20 outline-none transition-all pr-12 text-center tracking-wide text-rose-700 dark:text-rose-300";
+    feedbackIcon.innerHTML = `<i class="fas fa-times-circle text-rose-500"></i>`;
+    answerBox.classList.remove('hidden');
+    answerBox.querySelector('#trans-answer-word').innerText = item.target;
+
     addMistake({
         word: item.target,
         pos: "词性转换",
@@ -128,4 +137,5 @@ function revealTransAnswer() {
         category: "transformation",
         tip: item.explanation
     });
+    saveState();
 }

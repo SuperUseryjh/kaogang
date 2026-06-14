@@ -9,7 +9,7 @@ function switchTab(tabName) {
         document.getElementById(`view-${v}`).classList.add('hidden');
         const btn = document.getElementById(`tab-${v}`);
         if (btn) {
-            btn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50";
+            btn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-pill transition-all font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5";
         }
         
         const mBtn = document.getElementById(`m-tab-${v}`);
@@ -22,24 +22,24 @@ function switchTab(tabName) {
     
     const activeBtn = document.getElementById(`tab-${tabName}`);
     if (activeBtn) {
-        if (tabName === 'transformation') {
-            activeBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-emerald-500 pl-3";
-        } else if (tabName === 'mistakes') {
-            activeBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500 pl-3";
-        } else {
-            activeBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-blue-600 dark:text-blue-400 bg-blue-50/70 dark:bg-blue-950/30 border-l-4 border-blue-500 pl-3";
-        }
+        activeBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-pill transition-all font-medium bg-[#00ed64] text-[#001e2b]";
     }
 
     const activeMobileBtn = document.getElementById(`m-tab-${tabName}`);
     if (activeMobileBtn) {
-        if (tabName === 'transformation') {
-            activeMobileBtn.className = "flex flex-col items-center justify-center flex-1 text-emerald-600 dark:text-emerald-400";
-        } else if (tabName === 'mistakes') {
-            activeMobileBtn.className = "flex flex-col items-center justify-center flex-1 text-rose-600 dark:text-rose-400";
+        if (tabName === 'mistakes') {
+            activeMobileBtn.className = "flex flex-col items-center justify-center flex-1 text-rose-500 relative";
+        } else if (tabName === 'transformation') {
+            activeMobileBtn.className = "flex flex-col items-center justify-center flex-1 text-[#00ed64]";
         } else {
-            activeMobileBtn.className = "flex flex-col items-center justify-center flex-1 text-blue-600 dark:text-blue-400";
+            activeMobileBtn.className = "flex flex-col items-center justify-center flex-1 text-[#00ed64]";
         }
+    }
+
+    // 进入错题页时隐藏徽章（标记已读）
+    if (tabName === 'mistakes') {
+        document.getElementById('mistake-badge').classList.add('hidden');
+        document.getElementById('m-mistake-badge').classList.add('hidden');
     }
 
     if (tabName === 'dashboard') {
@@ -78,7 +78,7 @@ function renderDashboardCategories() {
 
     categories.forEach(cat => {
         const card = document.createElement('div');
-        card.className = "bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md dark:hover:border-slate-700 transition-all cursor-pointer group hover:-translate-y-0.5 flex flex-col justify-between";
+        card.className = "bg-white dark:bg-[#0a2a3a] p-5 rounded-xl border border-slate-200 dark:border-[#003d4f] shadow-sm hover:shadow-md dark:hover:border-[#00684a] transition-all cursor-pointer group hover:-translate-y-0.5 flex flex-col justify-between";
         
         let completedText = "";
         if (cat.id === 'transformation') {
@@ -94,14 +94,14 @@ function renderDashboardCategories() {
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr ${cat.color} flex items-center justify-center text-white shadow-sm">
                         <i class="fas ${cat.icon}"></i>
                     </div>
-                    <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 rounded-full">${completedText}</span>
+                    <span class="text-[10px] font-semibold text-slate-500 dark:text-[#a8b3bc] bg-slate-50 dark:bg-white/5 px-2.5 py-1 rounded-pill">${completedText}</span>
                 </div>
                 <div class="mt-4">
-                    <h4 class="font-bold text-slate-800 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">${cat.title}</h4>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">${cat.desc}</p>
+                    <h4 class="font-bold text-slate-800 dark:text-white text-sm group-hover:text-[#00ed64] transition-colors">${cat.title}</h4>
+                    <p class="text-xs text-slate-400 dark:text-[#a8b3bc] mt-1">${cat.desc}</p>
                 </div>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-50 dark:border-slate-800/60 flex items-center justify-between text-xs text-blue-600 dark:text-blue-400 font-bold">
+            <div class="mt-4 pt-3 border-t border-slate-50 dark:border-white/5 flex items-center justify-between text-xs text-[#00684a] dark:text-[#00ed64] font-bold">
                 <span>开始强化</span>
                 <i class="fas fa-chevron-right group-hover:translate-x-1 transition-transform"></i>
             </div>

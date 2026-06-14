@@ -79,7 +79,7 @@ function updateThemeIcon() {
     if (document.documentElement.classList.contains('dark')) {
         icon.className = "fas fa-sun text-amber-400";
     } else {
-        icon.className = "fas fa-moon text-slate-600 dark:text-slate-300";
+        icon.className = "fas fa-moon text-white";
     }
 }
 
@@ -166,9 +166,9 @@ function toggleMute() {
 function updateMuteButtonUI() {
     const icon = document.getElementById('mute-icon');
     if (appState.isMuted) {
-        icon.className = "fas fa-volume-mute text-rose-500 dark:text-rose-400";
+        icon.className = "fas fa-volume-mute text-rose-400";
     } else {
-        icon.className = "fas fa-volume-up text-blue-600 dark:text-blue-400";
+        icon.className = "fas fa-volume-up text-white";
     }
 }
 
@@ -211,8 +211,9 @@ function updateOverallProgress() {
     const count = appState.mistakes.length;
     const badge = document.getElementById('mistake-badge');
     const mBadge = document.getElementById('m-mistake-badge');
+    const mistakesView = document.getElementById('view-mistakes');
     
-    if (count > 0) {
+    if (count > 0 && (!mistakesView || mistakesView.classList.contains('hidden'))) {
         badge.innerText = count;
         badge.classList.remove('hidden');
         mBadge.innerText = count;

@@ -147,9 +147,19 @@ function revealDictAnswer() {
     if (activeDictationList.length === 0 || dictationChecked) return;
     const input = document.getElementById('dict-input');
     const item = activeDictationList[currentDictationIndex];
-    
-    input.value = item.word; 
-    checkDictAnswer(); 
-    
+    const feedbackIcon = document.getElementById('dict-feedback-icon');
+    const answerBox = document.getElementById('dict-answer-box');
+
+    input.value = item.word;
+    dictationChecked = true;
+    appState.stats.totalAttempts++;
+    dictationWrongCount++;
+
+    input.className = "w-full text-lg font-bold px-4 py-3.5 rounded-pill border-2 border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/50 dark:bg-rose-950/20 outline-none transition-all pr-12 text-center tracking-wide text-rose-700 dark:text-rose-300";
+    feedbackIcon.innerHTML = `<i class="fas fa-times-circle text-rose-500"></i>`;
+    answerBox.classList.remove('hidden');
+    answerBox.querySelector('#dict-answer-word').innerText = item.word;
+
     addMistake(item);
+    saveState();
 }

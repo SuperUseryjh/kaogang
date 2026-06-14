@@ -34,8 +34,42 @@ body {
 .animate-fadeIn {
     animation: fadeIn 0.3s ease-out;
 }
-/* tailwind config custom colors */
-:root {
-    --color-darkBg: #0f172a;
-    --color-darkCard: #1e293b;
+
+/* MongoDB-style 徽章脉冲 */
+@keyframes badgePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+.animate-badge-pulse {
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+/* 公告栏滚动 */
+@keyframes scrollUp {
+    0% { transform: translateY(0); }
+    33% { transform: translateY(-33.33%); }
+    66% { transform: translateY(-66.66%); }
+    100% { transform: translateY(0); }
+}
+.announcement-scroll {
+    animation: scrollUp 9s ease-in-out infinite;
+}
+.announcement-scroll:hover {
+    animation-play-state: paused;
+}
+
+/* MongoDB 风格的卡片阴影 */
+.mdg-shadow {
+    box-shadow: rgba(0, 30, 43, 0.04) 0px 1px 2px 0px;
+}
+.mdg-shadow-hover:hover {
+    box-shadow: rgba(0, 30, 43, 0.08) 0px 4px 12px 0px;
+}
+
+/* 渐变文字覆盖 */
+.mdg-text-gradient {
+    background: linear-gradient(135deg, #00ed64 0%, #00b545 50%, #00684a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
