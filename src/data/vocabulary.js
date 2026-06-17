@@ -1,7 +1,4 @@
-/**************************************************************
- * 核心词汇数据库 (根据上海英语中考大纲与常考重难点深度整理 - 豪华扩充版)
- **************************************************************/
-const VOCABULARY_DB = [
+export const VOCABULARY_DB = [
     // --- 名词 (Noun) ---
     { word: "achievement", pos: "n.", meaning: "成就，成绩，功绩", category: "noun", example: "Winning the prize is a great achievement.", tip: "动词是achieve，注意名词拼写以-ment结尾" },
     { word: "broadcast", pos: "n. & v.", meaning: "广播，播送", category: "noun", example: "The live broadcast will begin at 8 p.m.", tip: "过去式和过去分词与原形一致" },
@@ -165,7 +162,7 @@ const VOCABULARY_DB = [
 ];
 
 // 专为词性转换 (Zhongkao Section B: Word Form Completion) 设计的特色考题库
-const TRANSFORMATION_DB = [
+export const TRANSFORMATION_DB = [
     { original: "beauty", target: "beautiful", direction: "名词 变为 形容词", explanation: "-ty 结尾的抽象名词变成形容词通常变 y 为 i 加 -ful。" },
     { original: "clear", target: "clearly", direction: "形容词 变为 副词", explanation: "直接在词尾加 -ly 变成副词。" },
     { original: "danger", target: "dangerous", direction: "名词 变为 形容词", explanation: "名词 danger 加后缀 -ous 变成形容词。" },
@@ -229,7 +226,7 @@ const TRANSFORMATION_DB = [
     { original: "twenty", target: "twentieth", direction: "基数词 变为 序数词", explanation: "整十位数变序数词：把 y 变 ie 再加 th。二十(twenty) -> 第二十(twentieth)。" }
 ];
 
-const CATEGORY_MAP = {
+export const CATEGORY_MAP = {
     all: "全部词汇",
     noun: "核心名词",
     verb: "核心动词",
