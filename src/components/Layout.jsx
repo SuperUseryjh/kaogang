@@ -28,7 +28,7 @@ export default function Layout({ children }) {
         {/* Logo */}
         <div className="px-6 py-5 border-b border-slate-100 dark:border-[#003d4f]">
           <div className="flex items-center space-x-3">
-            <img src="/icon.png" alt="Logo" className="w-9 h-9 rounded-lg" />
+            <img src="./icon.png" alt="Logo" className="w-9 h-9 rounded-lg" />
             <div>
               <h1 className="text-sm font-bold text-[#001e2b] dark:text-white leading-tight">中考词汇</h1>
               <p className="text-[10px] text-slate-400 dark:text-[#a8b3bc]">背默通关神器</p>
@@ -75,7 +75,7 @@ export default function Layout({ children }) {
         {/* 顶部条 (仅移动端可见) */}
         <header className="md:hidden bg-[#001e2b] px-4 py-3 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center space-x-2">
-            <img src="/icon.png" alt="Logo" className="w-7 h-7 rounded-md" />
+            <img src="./icon.png" alt="Logo" className="w-7 h-7 rounded-md" />
             <span className="text-sm font-bold text-white">中考词汇</span>
           </div>
           <div className="flex items-center space-x-2">
