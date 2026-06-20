@@ -99,7 +99,7 @@ export default function CnToEn() {
     const acc = total > 0 ? Math.round((correctCount / total) * 100) : 0;
     return (
       <div className="tab-content">
-        <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">中文默英文</h2>
+        <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">中默英</h2>
         <div className="bg-white dark:bg-[#0a2a3a] rounded-xl border border-slate-200 dark:border-[#003d4f] p-8 text-center">
           <div className="w-16 h-16 rounded-full bg-[#00ed64]/10 flex items-center justify-center mx-auto mb-4">
             <i className="fas fa-language text-2xl text-[#00ed64]"></i>
@@ -132,7 +132,7 @@ export default function CnToEn() {
   return (
     <div className="tab-content">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-slate-800 dark:text-white">中文默英文</h2>
+        <h2 className="text-lg font-bold text-slate-800 dark:text-white">中默英</h2>
         <span className="text-xs text-slate-500 dark:text-[#a8b3bc]">
           <span className="text-[#00ed64] font-bold">{correctCount}</span> 正确 / <span className="text-rose-500 font-bold">{wrongCount}</span> 错误
         </span>
