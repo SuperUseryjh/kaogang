@@ -5,7 +5,8 @@ import { useSpeech } from '../hooks/useSpeech';
 const TABS = [
   { id: 'dashboard', icon: 'fa-chart-pie', label: '学习面板' },
   { id: 'flashcard', icon: 'fa-clone', label: '词卡速记' },
-  { id: 'dictation', icon: 'fa-keyboard', label: '默写通关' },
+  { id: 'cnoten', icon: 'fa-language', label: '中文默英文' },
+  { id: 'dictation', icon: 'fa-keyboard', label: '英默中' },
   { id: 'transformation', icon: 'fa-exchange-alt', label: '词性转换' },
   { id: 'mistakes', icon: 'fa-exclamation-triangle', label: '错题强化' },
   { id: 'wordlist', icon: 'fa-list-ul', label: '词汇检索' },

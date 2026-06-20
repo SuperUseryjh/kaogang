@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { useSound } from '../hooks/useSound';
 import { VOCABULARY_DB } from '../data/vocabulary';
 
-export default function Dictation() {
+export default function CnToEn() {
   const { addMistake, addMastered, recordAttempt } = useApp();
   const { playSound } = useSound();
 
@@ -19,18 +19,10 @@ export default function Dictation() {
 
   const inputRef = useRef(null);
 
-  // Initialize: shuffle and pick 10 words, show English side
-  const initDictation = useCallback(() => {
+  const initTest = useCallback(() => {
     const shuffled = [...VOCABULARY_DB].sort(() => Math.random() - 0.5);
     const selected = shuffled.slice(0, Math.min(10, shuffled.length));
-    // Show English word, ask for Chinese meaning
-    // Wrap meaning in the answer for comparison
-    const list = selected.map(w => ({
-      ...w,
-      // Normalize meaning for checking - we check if user's input includes parts of the meaning
-      meaningParts: w.meaning.replace(/[，、；：""（）]/g, ',').split(',').map(s => s.trim()).filter(Boolean)
-    }));
-    setWordList(list);
+    setWordList(selected);
     setCurrentIndex(0);
     setCorrectCount(0);
     setWrongCount(0);
@@ -42,25 +34,22 @@ export default function Dictation() {
   }, []);
 
   useEffect(() => {
-    initDictation();
-  }, [initDictation]);
+    initTest();
+  }, [initTest]);
 
   const currentItem = wordList[currentIndex];
   const totalItems = wordList.length;
 
-  // Check answer
   const checkAnswer = useCallback(() => {
     if (checked || !currentItem) return;
-    
+
     const userAnswer = input.trim().toLowerCase();
-    const isCorrectAnswer = currentItem.meaningParts.some(
-      part => part.toLowerCase().includes(userAnswer) || userAnswer.includes(part.toLowerCase())
-    ) || userAnswer === currentItem.meaning.toLowerCase().replace(/[，、；：""（）]/g, '').trim();
+    const isCorrectAnswer = userAnswer === currentItem.word.toLowerCase();
 
     setChecked(true);
     setIsCorrect(isCorrectAnswer);
     setIsRevealed(false);
-    
+
     if (isCorrectAnswer) {
       playSound('correct');
       setCorrectCount(c => c + 1);
@@ -74,7 +63,6 @@ export default function Dictation() {
     }
   }, [input, checked, currentItem, playSound, recordAttempt, addMastered, addMistake]);
 
-  // Reveal answer (counts as wrong)
   const revealAnswer = useCallback(() => {
     if (checked || !currentItem) return;
     setIsRevealed(true);
@@ -86,7 +74,6 @@ export default function Dictation() {
     addMistake(currentItem);
   }, [checked, currentItem, playSound, recordAttempt, addMistake]);
 
-  // Next question
   const nextQuestion = useCallback(() => {
     if (currentIndex < totalItems - 1) {
       setCurrentIndex(i => i + 1);
@@ -100,14 +87,10 @@ export default function Dictation() {
     }
   }, [currentIndex, totalItems]);
 
-  // Handle Enter key
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      if (!checked) {
-        checkAnswer();
-      } else {
-        nextQuestion();
-      }
+      if (!checked) checkAnswer();
+      else nextQuestion();
     }
   };
 
@@ -116,10 +99,10 @@ export default function Dictation() {
     const acc = total > 0 ? Math.round((correctCount / total) * 100) : 0;
     return (
       <div className="tab-content">
-        <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">默写通关</h2>
+        <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">中文默英文</h2>
         <div className="bg-white dark:bg-[#0a2a3a] rounded-xl border border-slate-200 dark:border-[#003d4f] p-8 text-center">
           <div className="w-16 h-16 rounded-full bg-[#00ed64]/10 flex items-center justify-center mx-auto mb-4">
-            <i className="fas fa-check-double text-2xl text-[#00ed64]"></i>
+            <i className="fas fa-language text-2xl text-[#00ed64]"></i>
           </div>
           <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">本轮已完成！</h3>
           <p className="text-sm text-slate-500 dark:text-[#a8b3bc] mb-4">
@@ -134,7 +117,7 @@ export default function Dictation() {
               ❌ 错误 {wrongCount}
             </span>
           </div>
-          <button onClick={initDictation} className="mt-6 px-6 py-2.5 bg-[#00ed64] text-[#001e2b] font-bold rounded-pill text-sm hover:bg-[#00b545] transition-all">
+          <button onClick={initTest} className="mt-6 px-6 py-2.5 bg-[#00ed64] text-[#001e2b] font-bold rounded-pill text-sm hover:bg-[#00b545] transition-all">
             <i className="fas fa-redo-alt mr-1"></i> 再来一轮
           </button>
         </div>
@@ -144,12 +127,12 @@ export default function Dictation() {
 
   if (!currentItem) return null;
 
-  const progress = totalItems > 0 ? Math.round(((currentIndex) / totalItems) * 100) : 0;
+  const progress = totalItems > 0 ? Math.round((currentIndex / totalItems) * 100) : 0;
 
   return (
     <div className="tab-content">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-slate-800 dark:text-white">默写通关</h2>
+        <h2 className="text-lg font-bold text-slate-800 dark:text-white">中文默英文</h2>
         <span className="text-xs text-slate-500 dark:text-[#a8b3bc]">
           <span className="text-[#00ed64] font-bold">{correctCount}</span> 正确 / <span className="text-rose-500 font-bold">{wrongCount}</span> 错误
         </span>
@@ -165,8 +148,8 @@ export default function Dictation() {
 
       {/* Question card */}
       <div className="bg-white dark:bg-[#0a2a3a] rounded-xl border border-slate-200 dark:border-[#003d4f] p-6 sm:p-8 mb-6">
-        <p className="text-[11px] font-semibold text-slate-400 dark:text-[#a8b3bc] mb-2">请写出以下单词/短语的中文释义</p>
-        <p className="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-white mb-1">{currentItem.word}</p>
+        <p className="text-[11px] font-semibold text-slate-400 dark:text-[#a8b3bc] mb-2">请根据中文释义写出对应的英文单词</p>
+        <p className="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-white mb-1">{currentItem.meaning}</p>
         <p className="text-sm text-slate-500 dark:text-[#a8b3bc] mb-6">{currentItem.pos}</p>
 
         {/* Input */}
@@ -178,7 +161,7 @@ export default function Dictation() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={checked}
-            placeholder="输入中文释义..."
+            placeholder="输入英文单词..."
             className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 dark:border-[#003d4f] bg-white dark:bg-[#0a2a3a] text-slate-800 dark:text-white placeholder-slate-300 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00ed64] disabled:opacity-50 disabled:cursor-not-allowed"
             autoFocus
           />
@@ -196,11 +179,9 @@ export default function Dictation() {
               {isCorrect ? '回答正确！' : (isRevealed ? '已显示答案' : '回答错误')}
             </p>
             <p className="text-sm text-slate-600 dark:text-[#a8b3bc]">
-              正确答案：<span className="font-bold text-slate-800 dark:text-white">{currentItem.meaning}</span>
+              正确答案：<span className="font-bold text-slate-800 dark:text-white">{currentItem.word}</span>
             </p>
-            {currentItem.tip && (
-              <p className="text-xs text-slate-400 dark:text-[#7c8c9a] mt-2">💡 {currentItem.tip}</p>
-            )}
+            <p className="text-xs text-slate-400 dark:text-[#a8b3bc] mt-2">{currentItem.tip}</p>
           </div>
         )}
       </div>

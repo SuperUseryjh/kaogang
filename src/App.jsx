@@ -2,6 +2,7 @@ import { AppProvider, useApp } from './context/AppContext';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
 import Flashcard from './components/Flashcard';
+import CnToEn from './components/CnToEn';
 import Dictation from './components/Dictation';
 import Transformation from './components/Transformation';
 import Mistakes from './components/Mistakes';
@@ -23,6 +24,7 @@ function MainContent() {
     switch (activeTab) {
       case 'dashboard': return <Dashboard />;
       case 'flashcard': return <Flashcard />;
+      case 'cnoten': return <CnToEn />;
       case 'dictation': return <Dictation />;
       case 'transformation': return <Transformation />;
       case 'mistakes': return <Mistakes />;

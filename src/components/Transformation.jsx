@@ -4,7 +4,7 @@ import { useSound } from '../hooks/useSound';
 import { TRANSFORMATION_DB } from '../data/vocabulary';
 
 export default function Transformation() {
-  const { addMistake, recordAttempt } = useApp();
+  const { addMistake, addMastered, recordAttempt } = useApp();
   const { playSound } = useSound();
 
   const [wordList, setWordList] = useState([]);
@@ -54,12 +54,13 @@ export default function Transformation() {
       playSound('correct');
       setCorrectCount(c => c + 1);
       recordAttempt(true);
+      addMastered(currentItem.original);
     } else {
       playSound('incorrect');
       setWrongCount(c => c + 1);
       recordAttempt(false);
     }
-  }, [input, checked, currentItem, playSound, recordAttempt]);
+  }, [input, checked, currentItem, playSound, recordAttempt, addMastered]);
 
   const revealAnswer = useCallback(() => {
     if (checked || !currentItem) return;
