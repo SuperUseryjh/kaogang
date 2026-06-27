@@ -97,7 +97,7 @@ export default function Layout({ children }) {
         {/* 页脚 */}
         <footer className="block text-center py-4 text-[11px] text-slate-400 dark:text-[#a8b3bc] border-t border-slate-100 dark:border-[#003d4f] pb-20 md:pb-4">
           <p>© 2026 上海英语中考考纲词汇背默平台 · 助力学子冲刺 A+</p>
-          <p>Built by YaoOnion & RankFrank4010</p>
+          <p>Built by YaoOnion & <a href="https://frankrank.franj2.top" target="_blank" rel="noopener noreferrer">frankrank</a></p>
         </footer>
 
         {/* 移动端底部导航 */}
